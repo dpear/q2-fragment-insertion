@@ -83,6 +83,56 @@ plugin.methods.register_function(
 
 
 plugin.methods.register_function(
+    function=q2_fragment_insertion.depp,
+    inputs={
+        'representative_sequences': FeatureData[Sequence], # Might need to change
+        'reference_database': SeppReferenceDatabase, # Might need to change
+    },
+    parameters={
+        'threads': qiime2.plugin.Int,
+        'alignment_subset_size': qiime2.plugin.Int, # Might need to change
+        'placement_subset_size': qiime2.plugin.Int, # Might need to change
+        'debug': qiime2.plugin.Bool, # Might need to change
+    },
+    outputs=[
+        ('tree', Phylogeny[Rooted]),
+        ('placements', Placements), # Might need to change
+    ],
+    input_descriptions={
+        'representative_sequences': 'The sequences to insert into the '
+                                    'reference tree.',
+        'reference_database': 'The reference database to insert the '
+                              'representative sequences into.',
+    },
+    parameter_descriptions={
+        'threads': 'The number of threads to use.',
+        'alignment_subset_size': 'Each placement subset is further broken '
+                                 'into subsets of at most these many '
+                                 'sequences and a separate HMM is trained on '
+                                 'each subset.', # Might need to change
+        'placement_subset_size': 'The tree is divided into subsets such that '
+                                 'each subset includes at most these many '
+                                 'subsets. The placement step places the '
+                                 'fragment on only one subset, determined '
+                                 'based on alignment scores. Further '
+                                 'reading: https://github.com/smirarab/sepp/'
+                                 'blob/master/tutorial/sepp-tutorial.md#sample'
+                                 '-datasets-default-parameters.', # Might need to change
+        'debug': 'Collect additional run information to STDOUT for debugging. '
+                 'Temporary directories will not be removed if run fails.' # Might need to change
+    },
+    output_descriptions={
+        'tree': 'The tree with inserted feature data.',
+        'placements': 'Information about the feature placements within the '
+                      'reference tree.',
+    },
+    name='Insert fragment sequences using SEPP into reference phylogenies.',
+    description='Perform fragment insertion of sequences using the DEPP '
+                'algorithm.',
+)
+
+
+plugin.methods.register_function(
     function=q2_fragment_insertion.classify_otus_experimental,
     inputs={
         'representative_sequences': FeatureData[Sequence],
